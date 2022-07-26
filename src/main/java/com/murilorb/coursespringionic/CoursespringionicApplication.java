@@ -8,9 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.murilorb.coursespringionic.domains.Category;
+import com.murilorb.coursespringionic.domains.City;
 import com.murilorb.coursespringionic.domains.Product;
+import com.murilorb.coursespringionic.domains.State;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
+import com.murilorb.coursespringionic.repositories.CityRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
+import com.murilorb.coursespringionic.repositories.StateRepository;
 
 @SpringBootApplication
 public class CoursespringionicApplication implements CommandLineRunner {
@@ -20,6 +24,12 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private StateRepository stateRepository;
+
+	@Autowired
+	private CityRepository cityRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoursespringionicApplication.class, args);
@@ -43,6 +53,19 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2));
 		productRepository.saveAll(Arrays.asList(p1, p2, p3));
+
+		State st1 = new State(null, "Minas Gerais");
+		State st2 = new State(null, "São Paulo");
+
+		City c1 = new City(null, "Uberlândia", st1);
+		City c2 = new City(null, "São Paulo", st2);
+		City c3 = new City(null, "Campinas", st2);
+
+		st1.getCities().addAll(Arrays.asList(c1));
+		st2.getCities().addAll(Arrays.asList(c2, c3));
+
+		stateRepository.saveAll(Arrays.asList(st1, st2));
+		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 	}
 
 }
