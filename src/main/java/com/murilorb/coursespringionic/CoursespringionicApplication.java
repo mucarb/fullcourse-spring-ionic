@@ -7,12 +7,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.murilorb.coursespringionic.domains.Address;
 import com.murilorb.coursespringionic.domains.Category;
 import com.murilorb.coursespringionic.domains.City;
+import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.Product;
 import com.murilorb.coursespringionic.domains.State;
+import com.murilorb.coursespringionic.domains.enums.CustomerType;
+import com.murilorb.coursespringionic.repositories.AddressRepository;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
 import com.murilorb.coursespringionic.repositories.CityRepository;
+import com.murilorb.coursespringionic.repositories.CustomerRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
 import com.murilorb.coursespringionic.repositories.StateRepository;
 
@@ -30,6 +35,12 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 	@Autowired
 	private CityRepository cityRepository;
+
+	@Autowired
+	private CustomerRepository customerRepository;
+
+	@Autowired
+	private AddressRepository addressRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoursespringionicApplication.class, args);
@@ -66,6 +77,18 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 		stateRepository.saveAll(Arrays.asList(st1, st2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+		Customer client1 = new Customer(null, "maria Silva", "maria@gmail.com", "36378912377",
+				CustomerType.PRIVATE_INDIVIDUAL);
+		client1.getPhones().addAll(Arrays.asList("1183267623", "3412445111"));
+
+		Address a1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "15472107", c1, client1);
+		Address a2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "12125722", c2, client1);
+
+		client1.getAdresses().addAll(Arrays.asList(a1, a2));
+
+		customerRepository.saveAll(Arrays.asList(client1));
+		addressRepository.saveAll(Arrays.asList(a1, a2));
 	}
 
 }
