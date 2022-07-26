@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.murilorb.coursespringionic.domains.Category;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
+import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
 
 @Service
 public class CategoryService {
@@ -16,7 +17,8 @@ public class CategoryService {
 
 	public Category findById(Integer id) {
 		Optional<Category> obj = repository.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Category.class.getName()));
 	}
 
 }
