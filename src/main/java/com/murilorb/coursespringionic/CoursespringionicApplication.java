@@ -1,5 +1,6 @@
 package com.murilorb.coursespringionic;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +9,24 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.murilorb.coursespringionic.domains.Address;
+import com.murilorb.coursespringionic.domains.BarcodePayment;
+import com.murilorb.coursespringionic.domains.CardPayment;
 import com.murilorb.coursespringionic.domains.Category;
 import com.murilorb.coursespringionic.domains.City;
 import com.murilorb.coursespringionic.domains.Customer;
+import com.murilorb.coursespringionic.domains.Payment;
 import com.murilorb.coursespringionic.domains.Product;
+import com.murilorb.coursespringionic.domains.Purchase;
 import com.murilorb.coursespringionic.domains.State;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
+import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
 import com.murilorb.coursespringionic.repositories.AddressRepository;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
 import com.murilorb.coursespringionic.repositories.CityRepository;
 import com.murilorb.coursespringionic.repositories.CustomerRepository;
+import com.murilorb.coursespringionic.repositories.PaymentRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
+import com.murilorb.coursespringionic.repositories.PurchaseRepository;
 import com.murilorb.coursespringionic.repositories.StateRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 	@Autowired
 	private AddressRepository addressRepository;
+
+	@Autowired
+	private PurchaseRepository purchaseRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoursespringionicApplication.class, args);
@@ -89,6 +103,21 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 		customerRepository.saveAll(Arrays.asList(client1));
 		addressRepository.saveAll(Arrays.asList(a1, a2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Purchase buy1 = new Purchase(null, sdf.parse("30/09/2017 10:32"), a1, client1);
+		Purchase buy2 = new Purchase(null, sdf.parse("10/10/2017 19:35"), a2, client1);
+
+		Payment pay1 = new CardPayment(null, PaymentStatus.SETTLED, buy1, 6);
+		buy1.setPayment(pay1);
+		Payment pay2 = new BarcodePayment(null, PaymentStatus.PENDING, buy2, sdf.parse("20/10/2017 00:00"), null);
+		buy2.setPayment(pay2);
+
+		client1.getPurchases().addAll(Arrays.asList(buy1, buy2));
+
+		purchaseRepository.saveAll(Arrays.asList(buy1, buy2));
+		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
 	}
 
 }

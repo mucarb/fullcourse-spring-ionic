@@ -33,6 +33,8 @@ public class Customer implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "PHONE")
 	private Set<String> phones = new HashSet<>();
+	@OneToMany(mappedBy = "customer")
+	private List<Purchase> purchases = new ArrayList<>();
 
 	public Customer() {
 	}
@@ -99,6 +101,14 @@ public class Customer implements Serializable {
 
 	public void setPhones(Set<String> phones) {
 		this.phones = phones;
+	}
+
+	public List<Purchase> getPurchases() {
+		return purchases;
+	}
+
+	public void setPurchasess(List<Purchase> purchases) {
+		this.purchases = purchases;
 	}
 
 	@Override
