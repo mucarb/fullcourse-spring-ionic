@@ -17,6 +17,7 @@ import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.Payment;
 import com.murilorb.coursespringionic.domains.Product;
 import com.murilorb.coursespringionic.domains.Purchase;
+import com.murilorb.coursespringionic.domains.PurchaseItem;
 import com.murilorb.coursespringionic.domains.State;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
 import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
@@ -26,6 +27,7 @@ import com.murilorb.coursespringionic.repositories.CityRepository;
 import com.murilorb.coursespringionic.repositories.CustomerRepository;
 import com.murilorb.coursespringionic.repositories.PaymentRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
+import com.murilorb.coursespringionic.repositories.PurchaseItemRepository;
 import com.murilorb.coursespringionic.repositories.PurchaseRepository;
 import com.murilorb.coursespringionic.repositories.StateRepository;
 
@@ -55,6 +57,9 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 	@Autowired
 	private PaymentRepository paymentRepository;
+
+	@Autowired
+	private PurchaseItemRepository purchaseItemRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoursespringionicApplication.class, args);
@@ -118,6 +123,19 @@ public class CoursespringionicApplication implements CommandLineRunner {
 
 		purchaseRepository.saveAll(Arrays.asList(buy1, buy2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
+
+		PurchaseItem pi1 = new PurchaseItem(buy1, p1, 0.0, 1, 2000.00);
+		PurchaseItem pi2 = new PurchaseItem(buy1, p3, 0.0, 2, 80.00);
+		PurchaseItem pi3 = new PurchaseItem(buy2, p2, 100.0, 1, 800.00);
+
+		buy1.getItems().addAll(Arrays.asList(pi1, pi2));
+		buy2.getItems().addAll(Arrays.asList(pi3));
+
+		p1.getItems().addAll(Arrays.asList(pi1));
+		p2.getItems().addAll(Arrays.asList(pi3));
+		p3.getItems().addAll(Arrays.asList(pi2));
+
+		purchaseItemRepository.saveAll(Arrays.asList(pi1, pi2, pi3));
 	}
 
 }

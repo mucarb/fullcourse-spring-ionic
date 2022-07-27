@@ -2,7 +2,9 @@ package com.murilorb.coursespringionic.domains;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -29,6 +32,8 @@ public class Purchase implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
+	@OneToMany(mappedBy = "id.purchase")
+	private Set<PurchaseItem> items = new HashSet<>();
 
 	public Purchase() {
 	}
@@ -78,6 +83,14 @@ public class Purchase implements Serializable {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public Set<PurchaseItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<PurchaseItem> items) {
+		this.items = items;
 	}
 
 	@Override
