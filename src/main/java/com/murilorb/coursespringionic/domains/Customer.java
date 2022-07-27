@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
 
 @Entity
@@ -33,6 +34,7 @@ public class Customer implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "PHONE")
 	private Set<String> phones = new HashSet<>();
+	@JsonIgnore
 	@OneToMany(mappedBy = "customer")
 	private List<Purchase> purchases = new ArrayList<>();
 
