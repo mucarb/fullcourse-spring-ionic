@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.murilorb.coursespringionic.domains.Category;
+import com.murilorb.coursespringionic.domains.dtos.CategoryDTO;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
 import com.murilorb.coursespringionic.services.exception.DataIntegrityException;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
@@ -55,6 +56,10 @@ public class CategoryService {
 		// nº da pagina, qtd de linhas, ordem(ascendente ou descrecente), ordenação
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repository.findAll(pageRequest);
+	}
+
+	public Category fromDTO(CategoryDTO objDto) {
+		return new Category(objDto.getId(), objDto.getName());
 	}
 
 }
