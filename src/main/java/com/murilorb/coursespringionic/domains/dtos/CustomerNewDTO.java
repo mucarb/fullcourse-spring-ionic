@@ -2,19 +2,36 @@ package com.murilorb.coursespringionic.domains.dtos;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.murilorb.coursespringionic.services.validation.CustomerInsert;
+
+@CustomerInsert
 public class CustomerNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
 	private String name;
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Email(message = "Email inválido")
 	private String email;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String cpfOrCnpj;
 	private Integer type;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String publicPlace;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String number;
 	private String complement;
 	private String neighborhood;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String zipCode;
 	private Integer cityId;
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String phone1;
 	private String phone2;
 	private String phone3;
