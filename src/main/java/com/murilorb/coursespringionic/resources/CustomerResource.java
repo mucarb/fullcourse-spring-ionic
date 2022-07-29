@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.dtos.CustomerDTO;
+import com.murilorb.coursespringionic.domains.dtos.CustomerNewDTO;
 import com.murilorb.coursespringionic.services.CustomerService;
 
 @RestController
@@ -45,7 +46,7 @@ public class CustomerResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody CustomerDTO objDto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody CustomerNewDTO objDto) {
 		Customer obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
