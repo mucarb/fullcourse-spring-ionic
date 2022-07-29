@@ -8,7 +8,9 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.murilorb.coursespringionic.domains.Customer;
+import com.murilorb.coursespringionic.services.validation.CustomerUpdate;
 
+@CustomerUpdate
 public class CustomerDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
