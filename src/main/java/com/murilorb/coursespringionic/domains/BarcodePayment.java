@@ -5,9 +5,12 @@ import java.util.Date;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
 
 @Entity
+// indicando para o tipo da subclasse ao instanciar pelos dados json
+@JsonTypeName("barcodePayment")
 public class BarcodePayment extends Payment {
 	private static final long serialVersionUID = 1L;
 

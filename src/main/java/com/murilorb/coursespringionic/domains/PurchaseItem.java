@@ -39,8 +39,16 @@ public class PurchaseItem implements Serializable {
 		return id.getPurchase();
 	}
 
+	public void setPurchase(Purchase purchase) {
+		id.setPurchase(purchase);
+	}
+
 	public Product getProduct() {
 		return id.getProduct();
+	}
+
+	public void setProduct(Product product) {
+		id.setProduct(product);
 	}
 
 	public PurchaseItemPK getId() {
