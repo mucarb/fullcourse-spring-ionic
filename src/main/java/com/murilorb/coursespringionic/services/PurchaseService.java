@@ -34,6 +34,9 @@ public class PurchaseService {
 	@Autowired
 	private PurchaseItemRepository purchaseItemRepository;
 
+	@Autowired
+	private CustomerService customerService;
+
 	public Purchase findById(Integer id) {
 		Optional<Purchase> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -44,6 +47,7 @@ public class PurchaseService {
 	public Purchase insert(Purchase obj) {
 		obj.setId(null);
 		obj.setInstant(new Date());
+		obj.setCustomer(customerService.findById(obj.getCustomer().getId()));
 		obj.getPayment().setStatus(PaymentStatus.PENDING);
 		obj.getPayment().setPurchase(obj);
 
@@ -56,10 +60,12 @@ public class PurchaseService {
 
 		for (PurchaseItem item : obj.getItems()) {
 			item.setDiscount(0.0);
-			item.setPrice(productService.findById(item.getProduct().getId()).getPrice());
+			item.setProduct(productService.findById(item.getProduct().getId()));
+			item.setPrice(item.getProduct().getPrice());
 			item.setPurchase(obj);
 		}
 		purchaseItemRepository.saveAll(obj.getItems());
+		System.out.println(obj);
 		return obj;
 	}
 

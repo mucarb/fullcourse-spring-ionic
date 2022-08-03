@@ -1,6 +1,8 @@
 package com.murilorb.coursespringionic.domains;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.persistence.EmbeddedId;
@@ -98,6 +100,21 @@ public class PurchaseItem implements Serializable {
 			return false;
 		PurchaseItem other = (PurchaseItem) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		StringBuilder builder = new StringBuilder();
+		builder.append(getProduct().getName());
+		builder.append(", Quantidade: ");
+		builder.append(getQuantity());
+		builder.append(", Preço Unitátio: ");
+		builder.append(nf.format(getPrice()));
+		builder.append(", Subtotal: ");
+		builder.append(nf.format(getSubTotal()));
+		builder.append("\n");
+		return builder.toString();
 	}
 
 }

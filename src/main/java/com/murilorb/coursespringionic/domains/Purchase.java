@@ -1,8 +1,11 @@
 package com.murilorb.coursespringionic.domains;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -120,6 +123,29 @@ public class Purchase implements Serializable {
 			return false;
 		Purchase other = (Purchase) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Número do pedido: ");
+		builder.append(getId());
+		builder.append(", Intante: ");
+		builder.append(sdf.format(getInstant()));
+		builder.append(", Cliente: ");
+		builder.append(getCustomer().getName());
+		builder.append(", Situação do pagameto: ");
+		builder.append(getPayment().getStatus().getDescription());
+		builder.append("\nDetalhes:\n");
+
+		for (PurchaseItem item : getItems()) {
+			builder.append(item.toString());
+		}
+		builder.append("Valor total: ");
+		builder.append(nf.format(getAmount()));
+		return builder.toString();
 	}
 
 }
