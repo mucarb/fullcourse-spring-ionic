@@ -36,6 +36,9 @@ public class PurchaseService {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	public Purchase findById(Integer id) {
 		Optional<Purchase> obj = repository.findById(id);
@@ -65,7 +68,7 @@ public class PurchaseService {
 			item.setPurchase(obj);
 		}
 		purchaseItemRepository.saveAll(obj.getItems());
-		System.out.println(obj);
+		emailService.sendPurchaseConfirmationEmail(obj);
 		return obj;
 	}
 
