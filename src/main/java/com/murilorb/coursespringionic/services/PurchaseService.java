@@ -36,7 +36,7 @@ public class PurchaseService {
 
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -68,7 +68,7 @@ public class PurchaseService {
 			item.setPurchase(obj);
 		}
 		purchaseItemRepository.saveAll(obj.getItems());
-		emailService.sendPurchaseConfirmationEmail(obj);
+		emailService.sendPurchaseConfirmationHtmlEmail(obj);
 		return obj;
 	}
 
