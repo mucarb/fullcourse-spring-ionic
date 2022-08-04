@@ -21,6 +21,7 @@ import com.murilorb.coursespringionic.domains.PurchaseItem;
 import com.murilorb.coursespringionic.domains.State;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
 import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
+import com.murilorb.coursespringionic.domains.enums.Profile;
 import com.murilorb.coursespringionic.repositories.AddressRepository;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
 import com.murilorb.coursespringionic.repositories.CityRepository;
@@ -125,13 +126,20 @@ public class DBService {
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("12345"));
 		client1.getPhones().addAll(Arrays.asList("1183267623", "3412445111"));
 
+		Customer client2 = new Customer(null, "Mario José", "rbmuca@gmail.com", "75693260089",
+				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("54321"));
+		client2.getPhones().addAll(Arrays.asList("18981093566", "6732517375"));
+		client2.addProfile(Profile.ADMIN);
+
 		Address a1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "15472107", c1, client1);
 		Address a2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "12125722", c2, client1);
+		Address a3 = new Address(null, "Avenida Floriano", "2106", null, "Centro", "45346000", c2, client2);
 
 		client1.getAdresses().addAll(Arrays.asList(a1, a2));
+		client2.getAdresses().addAll(Arrays.asList(a3));
 
-		customerRepository.saveAll(Arrays.asList(client1));
-		addressRepository.saveAll(Arrays.asList(a1, a2));
+		customerRepository.saveAll(Arrays.asList(client1, client2));
+		addressRepository.saveAll(Arrays.asList(a1, a2, a3));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
