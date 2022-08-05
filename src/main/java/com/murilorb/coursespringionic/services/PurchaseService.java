@@ -4,16 +4,22 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.murilorb.coursespringionic.domains.BarcodePayment;
+import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.Purchase;
 import com.murilorb.coursespringionic.domains.PurchaseItem;
 import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
 import com.murilorb.coursespringionic.repositories.PaymentRepository;
 import com.murilorb.coursespringionic.repositories.PurchaseItemRepository;
 import com.murilorb.coursespringionic.repositories.PurchaseRepository;
+import com.murilorb.coursespringionic.security.UserSS;
+import com.murilorb.coursespringionic.services.exception.AuthorizationException;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
 
 @Service
@@ -70,6 +76,17 @@ public class PurchaseService {
 		purchaseItemRepository.saveAll(obj.getItems());
 		emailService.sendPurchaseConfirmationHtmlEmail(obj);
 		return obj;
+	}
+
+	public Page<Purchase> findPage(Integer page, Integer linesPerPage, String direction, String orderBy) {
+		UserSS user = UserService.authenticated();
+
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado!");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Customer customer = customerService.findById(user.getId());
+		return repository.findByCustomer(customer, pageRequest);
 	}
 
 }
