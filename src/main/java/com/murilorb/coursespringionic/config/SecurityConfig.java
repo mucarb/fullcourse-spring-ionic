@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +18,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.murilorb.coursespringionic.security.JWTAuthenticationFilter;
+import com.murilorb.coursespringionic.security.JWTUtil;
+
 // Classe para configuracoes de seguranca
 @Configuration
 @EnableWebSecurity
@@ -23,6 +28,12 @@ public class SecurityConfig {
 
 	@Autowired
 	private Environment env;
+
+	@Autowired
+	private JWTUtil jwtUtil;
+
+	@Autowired
+	private AuthenticationConfiguration auth;
 
 	// caminhos que estao liberados sem autenticacao
 	public static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
@@ -44,9 +55,21 @@ public class SecurityConfig {
 		// PUBLIC_MATCHERS_GET caminhos somente para leitura, ou seja, requisição GET
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
+		// adicionando filtro de autenticacao e geracao do token n arequisicao
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(auth), jwtUtil));
 		// garantindo que seja criado sessao de usuario
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		return http.build();
+	}
+
+	/*
+	 * Fonte:
+	 * https://stackoverflow.com/questions/72381114/spring-security-upgrading-the-
+	 * deprecated-websecurityconfigureradapter-in-spring
+	 */
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
+		return auth.getAuthenticationManager();
 	}
 
 	@Bean
