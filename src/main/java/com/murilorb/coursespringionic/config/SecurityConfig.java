@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,6 +27,8 @@ import com.murilorb.coursespringionic.security.JWTUtil;
 // Classe para configuracoes de seguranca
 @Configuration
 @EnableWebSecurity
+//ira permitir anotacaoes de pre autorizacao nos endpoints
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
 	@Autowired
@@ -46,6 +49,8 @@ public class SecurityConfig {
 	// caminhos que estao liberados sem autenticacao, acesso somente a leitura
 	public static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**" };
 
+	public static final String[] PUBLIC_MATCHERS_POST = { "/customers/**" };
+
 	@Bean
 	public SecurityFilterChain basicUrlAuthenticationSettings(HttpSecurity http) throws Exception {
 		// pegando perfils ativos do projeto
@@ -58,8 +63,9 @@ public class SecurityConfig {
 		http.cors().and().csrf().disable();
 		// liberando autorizacao e exigindo autenticacao dos caminhos restantes
 		// PUBLIC_MATCHERS_GET caminhos somente para leitura, ou seja, requisição GET
-		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+				.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll().antMatchers(PUBLIC_MATCHERS).permitAll()
+				.anyRequest().authenticated();
 		// adicionando filtro de autenticacao e geracao do token n arequisicao
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(auth), jwtUtil));
 		// adicionando filtro de autorizacao
