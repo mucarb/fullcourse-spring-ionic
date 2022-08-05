@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -19,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.murilorb.coursespringionic.security.JWTAuthenticationFilter;
+import com.murilorb.coursespringionic.security.JWTAuthorizationFilter;
 import com.murilorb.coursespringionic.security.JWTUtil;
 
 // Classe para configuracoes de seguranca
@@ -34,6 +36,9 @@ public class SecurityConfig {
 
 	@Autowired
 	private AuthenticationConfiguration auth;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	// caminhos que estao liberados sem autenticacao
 	public static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
@@ -57,6 +62,8 @@ public class SecurityConfig {
 				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
 		// adicionando filtro de autenticacao e geracao do token n arequisicao
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(auth), jwtUtil));
+		// adicionando filtro de autorizacao
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(auth), jwtUtil, userDetailsService));
 		// garantindo que seja criado sessao de usuario
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		return http.build();
