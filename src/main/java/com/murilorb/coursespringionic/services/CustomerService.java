@@ -19,8 +19,11 @@ import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.dtos.CustomerDTO;
 import com.murilorb.coursespringionic.domains.dtos.CustomerNewDTO;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
+import com.murilorb.coursespringionic.domains.enums.Profile;
 import com.murilorb.coursespringionic.repositories.AddressRepository;
 import com.murilorb.coursespringionic.repositories.CustomerRepository;
+import com.murilorb.coursespringionic.security.UserSS;
+import com.murilorb.coursespringionic.services.exception.AuthorizationException;
 import com.murilorb.coursespringionic.services.exception.DataIntegrityException;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
 
@@ -41,6 +44,14 @@ public class CustomerService {
 	}
 
 	public Customer findById(Integer id) {
+		UserSS user = UserService.authenticated();
+
+		// testando o perfil
+		// a busca e exercida somente por admin ou com id solicitado é o mesmo do
+		// usuario
+		if (user == null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado!");
+		}
 		Optional<Customer> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Customer.class.getName()));
