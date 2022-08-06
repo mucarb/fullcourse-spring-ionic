@@ -49,7 +49,7 @@ public class SecurityConfig {
 	// caminhos que estao liberados sem autenticacao, acesso somente a leitura
 	public static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**" };
 
-	public static final String[] PUBLIC_MATCHERS_POST = { "/customers/**" };
+	public static final String[] PUBLIC_MATCHERS_POST = { "/customers/**", "/auth/forgot/**" };
 
 	@Bean
 	public SecurityFilterChain basicUrlAuthenticationSettings(HttpSecurity http) throws Exception {

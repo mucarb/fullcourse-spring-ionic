@@ -4,6 +4,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.SimpleMailMessage;
 
+import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.Purchase;
 
 public interface EmailService {
@@ -15,5 +16,7 @@ public interface EmailService {
 	void sendPurchaseConfirmationHtmlEmail(Purchase obj);
 
 	void sendHtmlEmail(MimeMessage msg);
+
+	void sendNewPasswordEmail(Customer customer, String newPass);
 
 }
