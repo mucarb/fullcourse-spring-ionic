@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.murilorb.coursespringionic.services.exception.FileException;
 
 @Service
 public class DropboxService {
@@ -38,22 +39,20 @@ public class DropboxService {
 			InputStream is = multipartFile.getInputStream();
 			return uploadFile(is, fileName);
 		} catch (IOException e) {
-			throw new RuntimeException("Erro de IO: " + e.getMessage());
+			throw new FileException("Erro de IO: " + e.getMessage());
 		}
 	}
 
-	public URI uploadFile(InputStream is, String fileName) {
+	public URI uploadFile(InputStream is, String fileName) throws IOException {
 		try {
 			LOG.info("Iniciando upload");
 			FileMetadata metadata = dropboxClient.files().uploadBuilder("/" + fileName).uploadAndFinish(is);
 			LOG.info("Upload de arquivo finalizado");
 			return new URI(dropboxClient.sharing().getFileMetadata(metadata.getId()).getPreviewUrl());
 		} catch (DbxException e) {
-			throw new RuntimeException();
-		} catch (IOException e) {
-			throw new RuntimeException();
+			throw new FileException("Erro na API do Dropbox: " + e.getMessage());
 		} catch (URISyntaxException e) {
-			throw new RuntimeException("Erro ao converter URL para URI");
+			throw new FileException("Erro ao converter URL para URI");
 		}
 	}
 
