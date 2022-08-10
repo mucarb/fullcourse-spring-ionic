@@ -1,15 +1,15 @@
 package com.murilorb.coursespringionic.services;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -32,20 +32,28 @@ public class DropboxService {
 	@Autowired
 	private DbxClientV2 dropboxClient;
 
-	public void uploadFile(String pathFile) {
+	public URI uploadFile(MultipartFile multipartFile) {
+		try {
+			String fileName = multipartFile.getOriginalFilename();
+			InputStream is = multipartFile.getInputStream();
+			return uploadFile(is, fileName);
+		} catch (IOException e) {
+			throw new RuntimeException("Erro de IO: " + e.getMessage());
+		}
+	}
+
+	public URI uploadFile(InputStream is, String fileName) {
 		try {
 			LOG.info("Iniciando upload");
-
-			InputStream inputStream = new FileInputStream(pathFile);
-			Path path = Paths.get(pathFile).getFileName();
-			FileMetadata metadata = dropboxClient.files().uploadBuilder("/" + path).uploadAndFinish(inputStream);
-
-			LOG.info("Upload de arquivo para dropbox no caminho " + metadata.getPathLower() + "com nome " + path
-					+ " e id " + metadata.getId());
+			FileMetadata metadata = dropboxClient.files().uploadBuilder("/" + fileName).uploadAndFinish(is);
+			LOG.info("Upload de arquivo finalizado");
+			return new URI(dropboxClient.sharing().getFileMetadata(metadata.getId()).getPreviewUrl());
 		} catch (DbxException e) {
 			throw new RuntimeException();
 		} catch (IOException e) {
 			throw new RuntimeException();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Erro ao converter URL para URI");
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.murilorb.coursespringionic.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.murilorb.coursespringionic.domains.Address;
 import com.murilorb.coursespringionic.domains.City;
@@ -38,6 +40,9 @@ public class CustomerService {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	private DropboxService dropboxService;
 
 	public List<Customer> findAll() {
 		return repository.findAll();
@@ -111,6 +116,10 @@ public class CustomerService {
 	private void updateData(Customer entity, Customer obj) {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
+	}
+
+	public URI uploadProfilePicture(MultipartFile file) {
+		return dropboxService.uploadFile(file);
 	}
 
 }
