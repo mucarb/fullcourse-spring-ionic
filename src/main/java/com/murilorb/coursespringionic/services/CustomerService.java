@@ -119,7 +119,16 @@ public class CustomerService {
 	}
 
 	public URI uploadProfilePicture(MultipartFile file) {
-		return dropboxService.uploadFile(file);
+		UserSS user = UserService.authenticated();
+
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		URI uri = dropboxService.uploadFile(file);
+		Customer entity = findById(user.getId());
+		entity.setImageUrl(uri.toString());
+		repository.save(entity);
+		return uri;
 	}
 
 }

@@ -48,6 +48,7 @@ public class Customer implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "customer")
 	private List<Purchase> purchases = new ArrayList<>();
+	private String imageUrl;
 
 	public Customer() {
 		addProfile(Profile.CLIENT);
@@ -158,6 +159,14 @@ public class Customer implements Serializable {
 			return false;
 		Customer other = (Customer) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 }
