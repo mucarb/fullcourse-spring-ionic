@@ -1,5 +1,7 @@
 package com.murilorb.coursespringionic.services;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +9,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +30,7 @@ import com.murilorb.coursespringionic.repositories.CustomerRepository;
 import com.murilorb.coursespringionic.security.UserSS;
 import com.murilorb.coursespringionic.services.exception.AuthorizationException;
 import com.murilorb.coursespringionic.services.exception.DataIntegrityException;
+import com.murilorb.coursespringionic.services.exception.FileException;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
 
 @Service
@@ -43,6 +47,12 @@ public class CustomerService {
 
 	@Autowired
 	private DropboxService dropboxService;
+
+	@Autowired
+	private ImageService imageService;
+
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 
 	public List<Customer> findAll() {
 		return repository.findAll();
@@ -119,16 +129,18 @@ public class CustomerService {
 	}
 
 	public URI uploadProfilePicture(MultipartFile file) {
-		UserSS user = UserService.authenticated();
+		try {
+			UserSS user = UserService.authenticated();
 
-		if (user == null) {
-			throw new AuthorizationException("Acesso negado");
+			if (user == null) {
+				throw new AuthorizationException("Acesso negado");
+			}
+			BufferedImage jpgImage = imageService.getJpgImageFromFile(file);
+			String fileName = prefix + user.getId() + ".jpg";
+			return dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
+		} catch (IOException e) {
+			throw new FileException("Erro ao ler arquivo");
 		}
-		URI uri = dropboxService.uploadFile(file);
-		Customer entity = findById(user.getId());
-		entity.setImageUrl(uri.toString());
-		repository.save(entity);
-		return uri;
 	}
 
 }
