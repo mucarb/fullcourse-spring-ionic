@@ -75,6 +75,21 @@ public class CustomerService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Customer.class.getName()));
 	}
 
+	public Customer findByEmail(String email) {
+		UserSS user = UserService.authenticated();
+
+		if (user == null || !user.hasRole(Profile.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Customer obj = repository.findByEmail(email);
+
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! Email: " + email + ", Tipo: " + Customer.class.getName());
+		}
+		return obj;
+	}
+
 	@Transactional
 	public Customer insert(Customer obj) {
 		obj.setId(null);
