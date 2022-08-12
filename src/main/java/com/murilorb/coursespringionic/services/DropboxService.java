@@ -48,7 +48,8 @@ public class DropboxService {
 			LOG.info("Iniciando upload");
 			FileMetadata metadata = dropboxClient.files().uploadBuilder("/" + fileName).uploadAndFinish(is);
 			LOG.info("Upload de arquivo finalizado");
-			return new URI(dropboxClient.sharing().getFileMetadata(metadata.getId()).getPreviewUrl());
+			String url = dropboxClient.sharing().createSharedLinkWithSettings(metadata.getId()).getUrl();
+			return new URI("https://dl.dropboxusercontent.com" + url.substring(23));
 		} catch (DbxException e) {
 			throw new FileException("Erro na API do Dropbox: " + e.getMessage());
 		} catch (URISyntaxException e) {
