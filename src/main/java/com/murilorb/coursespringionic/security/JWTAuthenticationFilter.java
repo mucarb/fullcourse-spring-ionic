@@ -65,6 +65,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String token = jwtUtil.generateToken(username);
 		// retorna o token na resposta da requisicao, adicionando o no cabecalho
 		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
 	}
 
 	// gerando status code 401 correto para spring 2.x.x para credenciais erradas
