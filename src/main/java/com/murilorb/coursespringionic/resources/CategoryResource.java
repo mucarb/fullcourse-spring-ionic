@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.murilorb.coursespringionic.domains.Category;
@@ -82,6 +83,14 @@ public class CategoryResource {
 		Page<Category> pagination = service.findPage(page, linesPerPage, direction, orderBy);
 		Page<CategoryDTO> paginationDto = pagination.map((obj) -> new CategoryDTO(obj));
 		return ResponseEntity.ok().body(paginationDto);
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PostMapping(value = "/{id}/picture")
+	public ResponseEntity<Void> uploadPicture(@RequestParam(name = "file") MultipartFile file,
+			@PathVariable Integer id) {
+		URI uri = service.uploadPicture(file, id);
+		return ResponseEntity.created(uri).build();
 	}
 
 }

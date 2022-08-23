@@ -67,12 +67,19 @@ public class DBService {
 
 	public void instantiateTestDatabase() throws ParseException {
 		Category cat1 = new Category(null, "Informática");
+		cat1.setImageUrl("https://dl.dropboxusercontent.com/s/a7yw83flop1yhid/cat1.jpg?dl=0");
 		Category cat2 = new Category(null, "Escritório");
+		cat2.setImageUrl("https://dl.dropboxusercontent.com/s/yflkupcc9edrqb2/cat2.jpg?dl=0");
 		Category cat3 = new Category(null, "Cama, Mesa e Banho");
+		cat3.setImageUrl("https://dl.dropboxusercontent.com/s/8evcktnl1de1gl2/cat3.jpg?dl=0");
 		Category cat4 = new Category(null, "Eletrônicos");
+		cat4.setImageUrl("https://dl.dropboxusercontent.com/s/b8ca0o8n68tsb4f/cat4.jpg?dl=0");
 		Category cat5 = new Category(null, "Jardinagem");
+		cat5.setImageUrl("https://dl.dropboxusercontent.com/s/a8jn81kjtarzpkb/cat5.jpg?dl=0");
 		Category cat6 = new Category(null, "Decoração");
+		cat6.setImageUrl("https://dl.dropboxusercontent.com/s/m3084ik98r56o4v/cat6.jpg?dl=0");
 		Category cat7 = new Category(null, "Perfumaria");
+		cat7.setImageUrl("https://dl.dropboxusercontent.com/s/9z5kc67mxnxdvms/cat7.jpg?dl=0");
 
 		Product p1 = new Product(null, "Computador", 2000.00);
 		Product p2 = new Product(null, "Impressora", 800.00);

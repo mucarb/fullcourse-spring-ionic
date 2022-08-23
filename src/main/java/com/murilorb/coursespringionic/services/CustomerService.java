@@ -52,7 +52,7 @@ public class CustomerService {
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${img.size}")
 	private Integer size;
 
 	public List<Customer> findAll() {
