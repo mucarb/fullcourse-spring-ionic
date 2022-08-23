@@ -1,7 +1,6 @@
 package com.murilorb.coursespringionic.services;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,6 @@ import com.murilorb.coursespringionic.repositories.CustomerRepository;
 import com.murilorb.coursespringionic.security.UserSS;
 import com.murilorb.coursespringionic.services.exception.AuthorizationException;
 import com.murilorb.coursespringionic.services.exception.DataIntegrityException;
-import com.murilorb.coursespringionic.services.exception.FileException;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
 
 @Service
@@ -147,20 +145,16 @@ public class CustomerService {
 	}
 
 	public URI uploadProfilePicture(MultipartFile file) {
-		try {
-			UserSS user = UserService.authenticated();
+		UserSS user = UserService.authenticated();
 
-			if (user == null) {
-				throw new AuthorizationException("Acesso negado");
-			}
-			BufferedImage jpgImage = imageService.getJpgImageFromFile(file);
-			jpgImage = imageService.cropSquare(jpgImage);
-			jpgImage = imageService.resize(jpgImage, size);
-			String fileName = prefix + user.getId() + ".jpg";
-			return dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
-		} catch (IOException e) {
-			throw new FileException("Erro ao ler arquivo");
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
 		}
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(file);
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+		String fileName = prefix + user.getId() + ".jpg";
+		return dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
 	}
 
 }
