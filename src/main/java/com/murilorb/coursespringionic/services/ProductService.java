@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.murilorb.coursespringionic.domains.Category;
 import com.murilorb.coursespringionic.domains.Product;
+import com.murilorb.coursespringionic.domains.dtos.ProductNewDTO;
 import com.murilorb.coursespringionic.repositories.CategoryRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
 import com.murilorb.coursespringionic.services.exception.ObjectNotFoundException;
@@ -28,6 +29,9 @@ public class ProductService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Autowired
 	private ImageService imageService;
@@ -45,6 +49,10 @@ public class ProductService {
 		Optional<Product> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Product.class.getName()));
+	}
+
+	public Product insert(Product obj) {
+		return repository.save(obj);
 	}
 
 	public Page<Product> search(String name, List<Integer> ids, Integer page, Integer linesPerPage, String direction,
@@ -69,6 +77,23 @@ public class ProductService {
 		prod.get().setImageUrl(uri.toString());
 		repository.save(prod.get());
 		return uri;
+	}
+
+	public Product fromDTO(ProductNewDTO objNewDto) {
+		Product obj = new Product(null, objNewDto.getName(), objNewDto.getPrice());
+
+		for (Integer categoryId : objNewDto.getCategoriesId()) {
+			Category category = categoryService.findById(categoryId);
+
+			if (category != null) {
+				category.getProducts().add(obj);
+				obj.getCategories().add(category);
+			}
+		}
+
+		URI uri = dropboxService.getFile("prod.jpg");
+		obj.setImageUrl(uri.toString());
+		return obj;
 	}
 
 }
