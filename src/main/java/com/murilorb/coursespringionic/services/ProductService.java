@@ -1,13 +1,18 @@
 package com.murilorb.coursespringionic.services;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.murilorb.coursespringionic.domains.Category;
 import com.murilorb.coursespringionic.domains.Product;
@@ -24,6 +29,18 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	@Autowired
+	private ImageService imageService;
+
+	@Autowired
+	private DropboxService dropboxService;
+
+	@Value("${img.prefix.product}")
+	private String prefix;
+
+	@Value("${img.size}")
+	private Integer size;
+
 	public Product findById(Integer id) {
 		Optional<Product> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -35,6 +52,23 @@ public class ProductService {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		List<Category> categories = categoryRepository.findAllById(ids);
 		return repository.search(name, categories, pageRequest);
+	}
+
+	public URI uploadPicture(MultipartFile file, Integer id) {
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(file);
+
+		// image adjustments
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+
+		String fileName = prefix + id + ".jpg";
+		InputStream is = imageService.getInputStream(jpgImage, "jpg");
+		URI uri = dropboxService.uploadFile(is, fileName);
+
+		Optional<Product> prod = repository.findById(id);
+		prod.get().setImageUrl(uri.toString());
+		repository.save(prod.get());
+		return uri;
 	}
 
 }
