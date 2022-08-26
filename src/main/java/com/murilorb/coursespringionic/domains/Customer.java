@@ -37,6 +37,7 @@ public class Customer implements Serializable {
 	private Integer type;
 	@JsonIgnore
 	private String password;
+	private String imageUrl;
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<Address> adresses = new ArrayList<>();
 	@ElementCollection
@@ -109,6 +110,14 @@ public class Customer implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public List<Address> getAdresses() {

@@ -136,6 +136,12 @@ public class CustomerService {
 		if (objDto.getPhone3() != null) {
 			customer.getPhones().add(objDto.getPhone3());
 		}
+		URI uri = dropboxService.getFile("avatar-blank.png");
+
+		if (uri == null) {
+			throw new ObjectNotFoundException("URI não encontrada");
+		}
+		customer.setImageUrl(uri.toString());
 		return customer;
 	}
 

@@ -232,11 +232,13 @@ public class DBService {
 		Customer client1 = new Customer(null, "Maria Silva", "murilo.rb60@gmail.com", "36378912377",
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("12345"));
 		client1.getPhones().addAll(Arrays.asList("1183267623", "3412445111"));
+		client1.setImageUrl("https://dl.dropboxusercontent.com/s/ywlaq6my2lsvhv7/cp1.jpg?dl=0");
 
 		Customer client2 = new Customer(null, "Mario José", "rbmuca@gmail.com", "75693260089",
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("54321"));
 		client2.getPhones().addAll(Arrays.asList("18981093566", "6732517375"));
 		client2.addProfile(Profile.ADMIN);
+		client1.setImageUrl("https://dl.dropboxusercontent.com/s/y8g3n32ahsgtj63/cp2.jpg?dl=0");
 
 		Address a1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "15472107", c1, client1);
 		Address a2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "12125722", c2, client1);
