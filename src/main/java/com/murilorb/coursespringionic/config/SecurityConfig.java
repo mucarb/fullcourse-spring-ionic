@@ -44,7 +44,7 @@ public class SecurityConfig {
 	private UserDetailsService userDetailsService;
 
 	// caminhos que estao liberados sem autenticacao
-	public static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
+	public static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/error" };
 
 	// caminhos que estao liberados sem autenticacao, acesso somente a leitura
 	public static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**", "/states/**" };
