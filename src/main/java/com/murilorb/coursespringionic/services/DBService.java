@@ -238,7 +238,7 @@ public class DBService {
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("54321"));
 		client2.getPhones().addAll(Arrays.asList("18981093566", "6732517375"));
 		client2.addProfile(Profile.ADMIN);
-		client1.setImageUrl("https://dl.dropboxusercontent.com/s/y8g3n32ahsgtj63/cp2.jpg?dl=0");
+		client2.setImageUrl("https://dl.dropboxusercontent.com/s/y8g3n32ahsgtj63/cp2.jpg?dl=0");
 
 		Address a1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "15472107", c1, client1);
 		Address a2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "12125722", c2, client1);
