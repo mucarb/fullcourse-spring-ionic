@@ -18,7 +18,6 @@ import com.murilorb.coursespringionic.domains.Payment;
 import com.murilorb.coursespringionic.domains.Product;
 import com.murilorb.coursespringionic.domains.Purchase;
 import com.murilorb.coursespringionic.domains.PurchaseItem;
-import com.murilorb.coursespringionic.domains.State;
 import com.murilorb.coursespringionic.domains.enums.CustomerType;
 import com.murilorb.coursespringionic.domains.enums.PaymentStatus;
 import com.murilorb.coursespringionic.domains.enums.Profile;
@@ -30,7 +29,6 @@ import com.murilorb.coursespringionic.repositories.PaymentRepository;
 import com.murilorb.coursespringionic.repositories.ProductRepository;
 import com.murilorb.coursespringionic.repositories.PurchaseItemRepository;
 import com.murilorb.coursespringionic.repositories.PurchaseRepository;
-import com.murilorb.coursespringionic.repositories.StateRepository;
 
 @Service
 public class DBService {
@@ -40,9 +38,6 @@ public class DBService {
 
 	@Autowired
 	private ProductRepository productRepository;
-
-	@Autowired
-	private StateRepository stateRepository;
 
 	@Autowired
 	private CityRepository cityRepository;
@@ -216,17 +211,13 @@ public class DBService {
 				p26, p27, p28, p29, p30, p31, p32, p34, p35, p36, p37, p38, p39, p40, p41, p42, p43, p44, p45, p46, p47,
 				p48, p49, p50));
 
-		State st1 = new State(null, "Minas Gerais");
-		State st2 = new State(null, "São Paulo");
+//		State st1 = new State(null, "Minas Gerais");
+//		State st2 = new State(null, "São Paulo");
 
-		City c1 = new City(null, "Uberlândia", st1);
-		City c2 = new City(null, "São Paulo", st2);
-		City c3 = new City(null, "Campinas", st2);
+		City c1 = cityRepository.findById(2389).get();
+		City c2 = cityRepository.findById(5270).get();
+		City c3 = cityRepository.findById(4814).get();
 
-		st1.getCities().addAll(Arrays.asList(c1));
-		st2.getCities().addAll(Arrays.asList(c2, c3));
-
-		stateRepository.saveAll(Arrays.asList(st1, st2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
 		Customer client1 = new Customer(null, "Maria Silva", "murilo.rb60@gmail.com", "36378912377",
@@ -234,7 +225,7 @@ public class DBService {
 		client1.getPhones().addAll(Arrays.asList("1183267623", "3412445111"));
 		client1.setImageUrl("https://dl.dropboxusercontent.com/s/ywlaq6my2lsvhv7/cp1.jpg?dl=0");
 
-		Customer client2 = new Customer(null, "Mario José", "rbmuca@gmail.com", "75693260089",
+		Customer client2 = new Customer(null, "Ana Julia", "rbmuca@gmail.com", "75693260089",
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("54321"));
 		client2.getPhones().addAll(Arrays.asList("18981093566", "6732517375"));
 		client2.addProfile(Profile.ADMIN);
