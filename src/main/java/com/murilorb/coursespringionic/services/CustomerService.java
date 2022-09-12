@@ -136,12 +136,6 @@ public class CustomerService {
 		if (objDto.getPhone3() != null) {
 			customer.getPhones().add(objDto.getPhone3());
 		}
-		URI uri = dropboxService.getFile("avatar-blank.png");
-
-		if (uri == null) {
-			throw new ObjectNotFoundException("URI não encontrada");
-		}
-		customer.setImageUrl(uri.toString());
 		return customer;
 	}
 
@@ -159,8 +153,18 @@ public class CustomerService {
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(file);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
+
+		Customer customer = findById(user.getId());
+
+		if (customer.getImageUrl() != null) {
+			dropboxService.deleteFile(customer.getImageUrl());
+		}
 		String fileName = prefix + user.getId() + ".jpg";
-		return dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
+		URI uri = dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
+
+		customer.setImageUrl(uri.toString());
+		repository.save(customer);
+		return uri;
 	}
 
 }

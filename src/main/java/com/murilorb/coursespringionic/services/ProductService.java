@@ -90,9 +90,6 @@ public class ProductService {
 				obj.getCategories().add(category);
 			}
 		}
-
-		URI uri = dropboxService.getFile("prod.jpg");
-		obj.setImageUrl(uri.toString());
 		return obj;
 	}
 

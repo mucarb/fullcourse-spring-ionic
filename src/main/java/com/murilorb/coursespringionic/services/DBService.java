@@ -211,19 +211,15 @@ public class DBService {
 				p26, p27, p28, p29, p30, p31, p32, p34, p35, p36, p37, p38, p39, p40, p41, p42, p43, p44, p45, p46, p47,
 				p48, p49, p50));
 
-//		State st1 = new State(null, "Minas Gerais");
-//		State st2 = new State(null, "São Paulo");
-
 		City c1 = cityRepository.findById(2389).get();
 		City c2 = cityRepository.findById(5270).get();
 		City c3 = cityRepository.findById(4814).get();
 
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-		Customer client1 = new Customer(null, "Maria Silva", "murilo.rb60@gmail.com", "36378912377",
+		Customer client1 = new Customer(null, "Murilo Ribeiro", "murilo.rb60@gmail.com", "36378912377",
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("12345"));
 		client1.getPhones().addAll(Arrays.asList("1183267623", "3412445111"));
-		client1.setImageUrl("https://dl.dropboxusercontent.com/s/ywlaq6my2lsvhv7/cp1.jpg?dl=0");
 
 		Customer client2 = new Customer(null, "Ana Julia", "rbmuca@gmail.com", "75693260089",
 				CustomerType.PRIVATE_INDIVIDUAL, passwordEncoder.encode("54321"));
