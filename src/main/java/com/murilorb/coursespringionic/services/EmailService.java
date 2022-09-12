@@ -3,10 +3,12 @@ package com.murilorb.coursespringionic.services;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 import com.murilorb.coursespringionic.domains.Customer;
 import com.murilorb.coursespringionic.domains.Purchase;
 
+@Service
 public interface EmailService {
 
 	void sendPurchaseConfirmationEmail(Purchase obj);
